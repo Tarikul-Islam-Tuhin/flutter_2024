@@ -28,10 +28,12 @@ class GitReposFlutterRepositoryImpl implements GitReposFlutterRepository {
         final remoteData =
             await remoteDataSource.getReposFlutter(params: params);
 
-        localDataSource.cacheRepos(remoteData);
-        localDataSource.setSessionData(params);
+        await localDataSource.cacheRepos(remoteData);
+        await localDataSource.setSessionData(params);
 
-        return Right(remoteData);
+        final updatedRemoteData = await localDataSource.getCachedRepos();
+
+        return Right(updatedRemoteData!);
       } on ServerException {
         return Left(ServerFailure(errorMessage: 'Server Exception'));
       }

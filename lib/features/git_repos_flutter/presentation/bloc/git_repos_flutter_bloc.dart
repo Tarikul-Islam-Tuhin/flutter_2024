@@ -29,7 +29,8 @@ class GitReposFlutterBloc
 
   GitReposFlutterBloc() : super(GitReposFlutterInitial()) {
     on<GitReposLoadedEvent>((event, emit) async {
-      emit(GitReposLoading());
+      // emit(GitReposLoading());
+      emit(LoadingState());
 
       GitReposFlutterRepositoryImpl repository = GitReposFlutterRepositoryImpl(
         remoteDataSource: GitReposFlutterRemoteDataSourceImpl(dio: Dio()),
@@ -44,7 +45,7 @@ class GitReposFlutterBloc
       failureOrRepos?.fold((error) {
         emit(Error(message: _mapFailureToMessage(error)));
       }, (data) {
-        emit(GitReposLoaded(repos: data, params: event.params));
+        emit(GitReposLoaded(repos: data));
       });
     });
     on<GitReposFilteredEvent>((event, emit) async {
@@ -52,11 +53,15 @@ class GitReposFlutterBloc
 
       GitReposFlutterLocalDataSourceImpl localData =
           GitReposFlutterLocalDataSourceImpl();
+      final getSessionDataPrev = await localData.getSessionData();
+      Params params = Params(
+          page: getSessionDataPrev.page,
+          stars: event.params.stars,
+          updated: event.params.updated);
+      await localData.setSessionData(params);
+      final getSessionDataAfter = await localData.getSessionData();
 
-      await localData.setSessionData(event.params);
-      final getSessionData = await localData.getSessionData();
-
-      emit(GitReposFilterState(params: getSessionData));
+      emit(GitReposFilterState(params: getSessionDataAfter));
     });
     on<GitReposFilteredEventInitialState>((event, emit) async {
       emit(GitReposLoading());
@@ -67,6 +72,23 @@ class GitReposFlutterBloc
       final getSessionData = await localData.getSessionData();
 
       emit(GitReposFilterState(params: getSessionData));
+    });
+
+    on<GitReposScrollEvent>((event, emit) async {
+      emit(LoadingState());
+      GitReposFlutterLocalDataSourceImpl localData =
+          GitReposFlutterLocalDataSourceImpl();
+
+      final getSessionData = await localData.getSessionData();
+
+      int page = getSessionData.page!;
+      Params params = Params(
+          page: page + 1,
+          stars: getSessionData.stars,
+          updated: getSessionData.updated);
+      await localData.setSessionData(params);
+
+      emit(GitReposFilterState(params: params));
     });
   }
 }

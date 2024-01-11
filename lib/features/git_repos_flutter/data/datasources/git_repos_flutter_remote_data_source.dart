@@ -14,13 +14,14 @@ class GitReposFlutterRemoteDataSourceImpl
   GitReposFlutterRemoteDataSourceImpl({required this.dio});
 
   _getUrl(Params params) {
-    String url = 'https://api.github.com/search/repositories?q=flutter';
+    String url =
+        'https://api.github.com/search/repositories?q=flutter&per_page=10';
     if (params.stars == 'stars') {
       url += '&sort=stars';
-    } else if (params.updated == 'update') {
+    } else if (params.updated == 'updated') {
       url += '&sort=updated';
     }
-    url += '&per_page=${params.perPage}';
+    url += '&page=${params.page}';
     return url;
   }
 

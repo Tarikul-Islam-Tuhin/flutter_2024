@@ -15,8 +15,7 @@ class GitReposLoading extends GitReposFlutterState {}
 
 class GitReposLoaded extends GitReposFlutterState {
   final List<GitReposFlutterEntity> repos;
-  final Params params;
-  const GitReposLoaded({required this.repos, required this.params});
+  const GitReposLoaded({required this.repos});
   @override
   List<Object> get props => [repos];
 }
@@ -33,4 +32,8 @@ final class GitReposFilterState extends GitReposActionState {
   GitReposFilterState({required this.params});
   @override
   List<Object> get props => [params];
+}
+
+class LoadingState extends GitReposActionState {
+  LoadingState();
 }

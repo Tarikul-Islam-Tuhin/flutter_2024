@@ -20,11 +20,11 @@ class GitReposFlutterLocalDataSourceImpl
 
   @override
   Future<List<GitReposFlutterModel>>? getCachedRepos() {
-    final repos = Hive.box(hiveReposBox);
+    final reposBox = Hive.box(hiveReposBox);
 
-    if (repos.keys.isNotEmpty) {
+    if (reposBox.keys.isNotEmpty) {
       List<GitReposFlutterModel> gitReposList =
-          repos.values.toList().map((dynamic json) {
+          reposBox.values.toList().map((dynamic json) {
         return GitReposFlutterModel.fromJson(jsonDecode(jsonEncode(json)));
       }).toList();
 
@@ -37,10 +37,12 @@ class GitReposFlutterLocalDataSourceImpl
   @override
   Future<void>? cacheRepos(List<GitReposFlutterModel>? repoToCache) async {
     final repos = Hive.box(hiveReposBox);
-    await repos.clear();
     if (repoToCache != null) {
       for (int i = 0; i < repoToCache.length; i++) {
-        await repos.put(repoToCache[i].id, repoToCache[i].toJson());
+        // ignoring duplicates
+        if (!repos.containsKey((repoToCache[i].id).toString())) {
+          await repos.put(repoToCache[i].id, repoToCache[i].toJson());
+        }
       }
     } else {
       throw CacheException();
@@ -54,13 +56,11 @@ class GitReposFlutterLocalDataSourceImpl
       final hiveSession = sessionBox.get('sessionData');
       final sessionStars = hiveSession['stars'];
       final sessionUpdated = hiveSession['updated'];
-      final sessionPerPage = hiveSession['perPage'];
+      final sessionPage = hiveSession['perPage'];
       return Future.value(Params(
-          stars: sessionStars,
-          updated: sessionUpdated,
-          perPage: sessionPerPage));
+          stars: sessionStars, updated: sessionUpdated, page: sessionPage));
     } else {
-      const params = Params(stars: 'stars', updated: '', perPage: 10);
+      const params = Params(stars: '', updated: '', page: 1);
       await setSessionData(params);
       return Future.value(params);
     }
@@ -70,14 +70,22 @@ class GitReposFlutterLocalDataSourceImpl
   Future<void>? setSessionData(Params params) async {
     final sessionBox = Hive.box(hiveSessionBox);
     await sessionBox.clear();
-    if (params.perPage != null) {
-      await sessionBox.put('sessionData', {
-        'perPage': params.perPage,
-        'updated': params.updated,
-        'stars': params.stars
-      });
+    Map query = {};
+    if (params.updated == 'updated') {
+      query['updated'] = 'updated';
     } else {
-      throw CacheException();
+      query['updated'] = '';
     }
+    if (params.stars == 'stars') {
+      query['stars'] = 'stars';
+    } else {
+      query['stars'] = '';
+    }
+    if (params.page != null) {
+      query['perPage'] = params.page;
+    } else {
+      query['perPage'] = 1;
+    }
+    await sessionBox.put('sessionData', Map.from(query));
   }
 }

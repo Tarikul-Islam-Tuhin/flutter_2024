@@ -1,4 +1,4 @@
-import 'package:bs23_flutter_task/features/git_repos_flutter/presentation/widgets/card_item.dart';
+import 'package:bs23_flutter_task/features/git_repos_flutter/presentation/widgets/list_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,8 +43,7 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             BlocProvider.of<GitReposFlutterBloc>(context).add(
                               const GitReposFilteredEvent(
-                                params: Params(
-                                    perPage: 4, updated: '', stars: 'stars'),
+                                params: Params(updated: '', stars: 'stars'),
                               ),
                             );
                           },
@@ -63,9 +62,7 @@ class _HomePageState extends State<HomePage> {
                               BlocProvider.of<GitReposFlutterBloc>(context).add(
                                   const GitReposFilteredEvent(
                                       params: Params(
-                                          perPage: 4,
-                                          updated: 'updated',
-                                          stars: '')));
+                                          updated: 'updated', stars: '')));
                             },
                             child: Text(
                               'Latest',
@@ -92,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                   BlocProvider.of<GitReposFlutterBloc>(context).add(
                       GitReposLoadedEvent(
                           params: Params(
-                              perPage: state.params.perPage,
+                              page: state.params.page,
                               stars: state.params.stars,
                               updated: state.params.updated)));
                 }
