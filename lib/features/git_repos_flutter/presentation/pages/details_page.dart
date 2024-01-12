@@ -36,11 +36,6 @@ class _DetailsPageState extends State<DetailsPage> {
                 userId: widget.repo.id.toString(),
                 radius: 100.0,
               ),
-              // child: CircleAvatar(
-              //   radius: 100.0,
-              //   backgroundImage: FileImage(imageFile!),
-              //   backgroundColor: Colors.transparent,
-              // ),
             ),
             repoInfoCard('Name', widget.repo.name),
             repoInfoCard('Repository description', widget.repo.description),
