@@ -17,9 +17,10 @@ Key features:
 6. Sorting option persist in session.
 7. details page contains repo description, name, image, last update date time in the required format.
 8. stored all fetched data.
+9. Sort based on stars and updated
 
 Extra:
 Wrote Some Unit Tests, UI Tests and used flutter bloc as State Management by maintaing domain driven architechture.
 
-Note: I have not sorted the list locally based on updated date time and stars. Right now, I sorted the list through query params during api call. I will do it by tonight. I missed the business somehow. In additon to that, I have not completely refactored the code. I tried to maintain as much as possible in two days. Any suggestion would be greatful for my learning.
+Note: I have not completely refactored the code. I tried to maintain as much as possible in two days. Any suggestion would be greatful for my learning.
 
