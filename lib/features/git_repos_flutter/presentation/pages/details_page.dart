@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-
 import '../../../../core/utils/parse_date_time.dart';
 import '../../domain/entities/git_repos_flutter_entity.dart';
 import '../widgets/image_file.dart';
@@ -16,13 +13,6 @@ class DetailsPage extends StatefulWidget {
 }
 
 class _DetailsPageState extends State<DetailsPage> {
-  File? imageFile;
-  @override
-  void initState() {
-    super.initState();
-    imageFile = File(widget.filePath);
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
