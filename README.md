@@ -1,6 +1,6 @@
 # bs23_flutter_task
 
-Note: I have not completely refactored the code. I tried to maintain as much as possible in two days. Any suggestion would be greatful for my learning.
+Note: I have not sorted the list locally based on updated date time and stars. I sorted the list through query params during api call. I will do it by tonight. I missed the business somehow. In additon to that, I have not completely refactored the code. I tried to maintain as much as possible in two days. Any suggestion would be greatful for my learning.
 
 
 Screen Shots: 
