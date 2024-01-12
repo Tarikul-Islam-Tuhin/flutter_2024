@@ -25,9 +25,9 @@ class GitReposFlutterRepositoryImpl implements GitReposFlutterRepository {
     if (cachedRepo == null) return null;
 
     if (params.stars == 'stars') {
-      cachedRepo.sort((a, b) => a.stargazersCount.compareTo(b.stargazersCount));
+      cachedRepo.sort((a, b) => b.stargazersCount.compareTo(a.stargazersCount));
     } else if (params.updated == 'updated') {
-      cachedRepo.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+      cachedRepo.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
     }
 
     return cachedRepo;
