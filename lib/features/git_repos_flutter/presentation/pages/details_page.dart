@@ -28,6 +28,9 @@ class _DetailsPageState extends State<DetailsPage> {
                 radius: 100.0,
               ),
             ),
+            const SizedBox(
+              height: 20,
+            ),
             repoInfoCard('Name', widget.repo.name),
             repoInfoCard('Repository description', widget.repo.description),
             repoInfoCard('Last Updated', formatDate(widget.repo.updatedAt)),
