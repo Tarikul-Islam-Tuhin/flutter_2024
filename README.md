@@ -13,7 +13,7 @@ Details Page:
 Key features: 
 1. The fetch data is stored in the local database using hive.
 2. Scrolling will fetch 10 new items by maintaining pagination.
-3. The data cannot be fetched no more than once in every 30 minutes.
+3. The data cannot be fetched no more than once in every 30 minutes (Snackbar will visible after one fetch) .
 4. Showed list of repositories on the homepage.
 5. A repo details page by navigating by clicking on a item.
 6. Sorting option persist in session.
@@ -21,5 +21,5 @@ Key features:
 8. stored all fetched data.
 
 Extra:
-Wrote Some Unit Tests, UI Tests and used flutter bloc as State Management by maintaing domain pattern architechture.
+Wrote Some Unit Tests, UI Tests and used flutter bloc as State Management by maintaing domain driven architechture.
 
