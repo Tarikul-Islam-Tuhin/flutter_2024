@@ -17,8 +17,19 @@ part 'git_repos_flutter_state.dart';
 
 class GitReposFlutterBloc
     extends Bloc<GitReposFlutterEvent, GitReposFlutterState> {
-  List<GitReposFlutterEntity> reposGlobalBloc = [];
+  // DI
+  final repository = GitReposFlutterRepositoryImpl(
+    remoteDataSource: GitReposFlutterRemoteDataSourceImpl(dio: Dio()),
+    localDataSource: GitReposFlutterLocalDataSourceImpl(),
+    networkInfo: NetworkInfoImpl(InternetConnection()),
+  );
+
+  // local data
+  final localData = GitReposFlutterLocalDataSourceImpl();
+  final networkInfo = NetworkInfoImpl(InternetConnection());
   final String filePath = '';
+
+  // local function
   _mapFailureToMessage(failure) {
     switch (failure.runtimeType) {
       case ServerFailure:
@@ -33,21 +44,18 @@ class GitReposFlutterBloc
   GitReposFlutterBloc() : super(GitReposFlutterInitial()) {
     on<GitReposLoadedEvent>((event, emit) async {
       final filePath = await getFilePath();
-
-      GitReposFlutterRepositoryImpl repository = GitReposFlutterRepositoryImpl(
-        remoteDataSource: GitReposFlutterRemoteDataSourceImpl(dio: Dio()),
-        localDataSource: GitReposFlutterLocalDataSourceImpl(),
-        networkInfo: NetworkInfoImpl(InternetConnection()),
-      );
-
       final storedTimeInMin =
           await repository.localDataSource.getStoredTimeDifferenceInMinutes();
-      if (storedTimeInMin! > 0) {
-        emit(ShowTimeState(timeLeft: storedTimeInMin));
-        final cachedRepo = await repository.localDataSource.getCachedRepos();
-        emit(GitReposLoaded(repos: cachedRepo!, filePath: filePath));
 
-        return;
+      final bool hasNetWork = await repository.networkInfo.isConnected!;
+      if (hasNetWork) {
+        if (storedTimeInMin! > 0) {
+          emit(ShowTimeState(timeLeft: storedTimeInMin));
+          final cachedRepo = await repository.localDataSource.getCachedRepos();
+          emit(GitReposLoaded(repos: cachedRepo!, filePath: filePath));
+
+          return;
+        }
       }
 
       final failureOrRepos = await GetGitReposFlutter(repository).call(
@@ -62,32 +70,30 @@ class GitReposFlutterBloc
     });
 
     on<GitReposFilteredEvent>((event, emit) async {
-      GitReposFlutterLocalDataSourceImpl localData =
-          GitReposFlutterLocalDataSourceImpl();
-      final storedTimeInMin =
-          await localData.getStoredTimeDifferenceInMinutes();
-      if (storedTimeInMin! > 0) {
-        emit(ShowTimeState(timeLeft: storedTimeInMin));
-        return;
-      } else {
-        emit(GitReposLoading());
+      final bool hasNetWork = await networkInfo.isConnected;
+
+      if (hasNetWork) {
+        final storedTimeInMin =
+            await localData.getStoredTimeDifferenceInMinutes();
+        if (storedTimeInMin! > 0) {
+          emit(ShowTimeState(timeLeft: storedTimeInMin));
+          return;
+        } else {
+          emit(GitReposLoading());
+        }
+
+        final getSessionDataPrev = await localData.getSessionData();
+        Params params = Params(
+            page: getSessionDataPrev.page,
+            stars: event.params.stars,
+            updated: event.params.updated);
+        await localData.setSessionData(params);
+
+        emit(GitReposFilterState(params: params));
       }
-
-      final getSessionDataPrev = await localData.getSessionData();
-      Params params = Params(
-          page: getSessionDataPrev.page,
-          stars: event.params.stars,
-          updated: event.params.updated);
-      await localData.setSessionData(params);
-      final getSessionDataAfter = await localData.getSessionData();
-
-      emit(GitReposFilterState(params: getSessionDataAfter));
     });
 
     on<GitReposFilteredEventInitialState>((event, emit) async {
-      GitReposFlutterLocalDataSourceImpl localData =
-          GitReposFlutterLocalDataSourceImpl();
-
       emit(GitReposLoading());
 
       final getSessionData = await localData.getSessionData();
@@ -96,19 +102,19 @@ class GitReposFlutterBloc
     });
 
     on<GitReposScrollEvent>((event, emit) async {
-      GitReposFlutterLocalDataSourceImpl localData =
-          GitReposFlutterLocalDataSourceImpl();
+      final bool hasNetWork = await networkInfo.isConnected;
+      if (hasNetWork) {
+        final getSessionData = await localData.getSessionData();
 
-      final getSessionData = await localData.getSessionData();
+        int page = getSessionData.page!;
+        Params params = Params(
+            page: page + 1,
+            stars: getSessionData.stars,
+            updated: getSessionData.updated);
+        await localData.setSessionData(params);
 
-      int page = getSessionData.page!;
-      Params params = Params(
-          page: page + 1,
-          stars: getSessionData.stars,
-          updated: getSessionData.updated);
-      await localData.setSessionData(params);
-
-      emit(GitReposFilterState(params: params));
+        emit(GitReposFilterState(params: params));
+      }
     });
   }
 }
