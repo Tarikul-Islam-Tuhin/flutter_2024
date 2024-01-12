@@ -52,6 +52,12 @@ class GitReposFlutterBloc
         if (storedTimeInMin! > 0) {
           emit(ShowTimeState(timeLeft: storedTimeInMin));
           final cachedRepo = await repository.localDataSource.getCachedRepos();
+          if (event.params.stars == 'stars') {
+            cachedRepo?.sort(
+                (a, b) => a.stargazersCount.compareTo(b.stargazersCount));
+          } else if (event.params.updated == 'updated') {
+            cachedRepo?.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+          }
           emit(GitReposLoaded(repos: cachedRepo!, filePath: filePath));
 
           return;
