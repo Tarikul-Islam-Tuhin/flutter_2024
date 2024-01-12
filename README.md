@@ -1,4 +1,6 @@
 # bs23_flutter_task
+The apk can be found the below drive link:
+https://drive.google.com/file/d/1kSvFWGlFyRvSfFP28S3vi6ozgTtrd1So/view?usp=sharing
 
 Key features: 
 1. The fetch data is stored in the local database using hive.
@@ -7,7 +9,7 @@ Key features:
 4. Showed list of repositories on the homepage.
 5. A repo details page by navigating by clicking on a item.
 6. Sorting option persist in session.
-7. details page contains repo description, name, image, last update date time in the required format.
+7. details page contains stars, repo description, name, image, last update date time in the required format.
 8. stored all fetched data.
 9. Sort based on stars and updated
 
