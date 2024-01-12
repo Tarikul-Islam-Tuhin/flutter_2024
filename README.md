@@ -1,16 +1,12 @@
 # bs23_flutter_task
 
-A new Flutter project.
+Note: I have not completely refactored the code. I tried to maintain as much as possible in two days. Any suggestion would be greatful for my learning.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+Screen Shots: 
+Home Page:
+![Screenshot_1705066591](https://github.com/Tarikul-Islam-Tuhin/flutter_2024/assets/119291006/9fe79c76-4a3f-405c-9803-34fc11dd911a)
 
-A few resources to get you started if this is your first Flutter project:
+Details Page: 
+![Screenshot_1705066599](https://github.com/Tarikul-Islam-Tuhin/flutter_2024/assets/119291006/dfcfc097-e562-4d5e-a1b5-23cfeb0764b2)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
