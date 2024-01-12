@@ -33,6 +33,7 @@ class _DetailsPageState extends State<DetailsPage> {
             ),
             repoInfoCard('Name', widget.repo.name),
             repoInfoCard('Repository description', widget.repo.description),
+            repoInfoCard('Stars', widget.repo.stargazersCount.toString()),
             repoInfoCard('Last Updated', formatDate(widget.repo.updatedAt)),
           ]),
         ),
