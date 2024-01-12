@@ -7,7 +7,7 @@ Key features:
 4. Showed list of repositories on the homepage.
 5. A repo details page by navigating by clicking on a item.
 6. Sorting option persist in session.
-7. details page contains repo description, name, image, last update date time in the required format.
+7. details page contains stars, repo description, name, image, last update date time in the required format.
 8. stored all fetched data.
 9. Sort based on stars and updated
 
