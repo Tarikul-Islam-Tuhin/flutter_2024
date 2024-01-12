@@ -20,6 +20,19 @@ class GitReposFlutterRepositoryImpl implements GitReposFlutterRepository {
     required this.networkInfo,
   });
 
+  List<GitReposFlutterEntity>? _sortCachedRepos(
+      List<GitReposFlutterEntity>? cachedRepo, Params params) {
+    if (cachedRepo == null) return null;
+
+    if (params.stars == 'stars') {
+      cachedRepo.sort((a, b) => a.stargazersCount.compareTo(b.stargazersCount));
+    } else if (params.updated == 'updated') {
+      cachedRepo.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+    }
+
+    return cachedRepo;
+  }
+
   @override
   Future<Either<Failure, List<GitReposFlutterEntity>>>? getReposFlutter(
       {required Params params}) async {
@@ -33,29 +46,16 @@ class GitReposFlutterRepositoryImpl implements GitReposFlutterRepository {
         await localDataSource.setSessionData(params);
 
         final updatedRemoteData = await localDataSource.getCachedRepos();
-        // sort based on stars or updated
-        if (params.stars == 'stars') {
-          updatedRemoteData
-              ?.sort((a, b) => a.stargazersCount.compareTo(b.stargazersCount));
-        } else if (params.updated == 'updated') {
-          updatedRemoteData?.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
-        }
-
-        return Right(updatedRemoteData!);
+        final sortedData = _sortCachedRepos(updatedRemoteData, params);
+        return Right(sortedData!);
       } on ServerException {
         return Left(ServerFailure(errorMessage: 'Server Exception'));
       }
     } else {
       try {
         final localRepos = await localDataSource.getCachedRepos();
-        // sort based on stars or updated
-        if (params.stars == 'stars') {
-          localRepos
-              ?.sort((a, b) => a.stargazersCount.compareTo(b.stargazersCount));
-        } else if (params.updated == 'updated') {
-          localRepos?.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
-        }
-        return Right(localRepos!);
+        final sortedData = _sortCachedRepos(localRepos, params);
+        return Right(sortedData!);
       } on CacheException {
         return Left(CacheFailure(errorMessage: 'Epmty DB'));
       }
