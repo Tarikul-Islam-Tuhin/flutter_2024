@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import '../../../../core/connection/network_info.dart';
+import '../../../../core/utils/download_path.dart';
 import '../../../../core/errors/failure.dart';
 import '../../data/datasources/git_repos_flutter_local_data_source.dart';
 import '../../data/datasources/git_repos_flutter_remote_data_source.dart';
@@ -16,6 +17,8 @@ part 'git_repos_flutter_state.dart';
 
 class GitReposFlutterBloc
     extends Bloc<GitReposFlutterEvent, GitReposFlutterState> {
+  List<GitReposFlutterEntity> reposGlobalBloc = [];
+  final String filePath = '';
   _mapFailureToMessage(failure) {
     switch (failure.runtimeType) {
       case ServerFailure:
@@ -29,14 +32,23 @@ class GitReposFlutterBloc
 
   GitReposFlutterBloc() : super(GitReposFlutterInitial()) {
     on<GitReposLoadedEvent>((event, emit) async {
-      // emit(GitReposLoading());
-      emit(LoadingState());
+      final filePath = await getFilePath();
 
       GitReposFlutterRepositoryImpl repository = GitReposFlutterRepositoryImpl(
         remoteDataSource: GitReposFlutterRemoteDataSourceImpl(dio: Dio()),
         localDataSource: GitReposFlutterLocalDataSourceImpl(),
         networkInfo: NetworkInfoImpl(InternetConnection()),
       );
+
+      final storedTimeInMin =
+          await repository.localDataSource.getStoredTimeDifferenceInMinutes();
+      if (storedTimeInMin! > 0) {
+        emit(ShowTimeState(timeLeft: storedTimeInMin));
+        final cachedRepo = await repository.localDataSource.getCachedRepos();
+        emit(GitReposLoaded(repos: cachedRepo!, filePath: filePath));
+
+        return;
+      }
 
       final failureOrRepos = await GetGitReposFlutter(repository).call(
         params: event.params,
@@ -45,14 +57,22 @@ class GitReposFlutterBloc
       failureOrRepos?.fold((error) {
         emit(Error(message: _mapFailureToMessage(error)));
       }, (data) {
-        emit(GitReposLoaded(repos: data));
+        emit(GitReposLoaded(repos: data, filePath: filePath));
       });
     });
-    on<GitReposFilteredEvent>((event, emit) async {
-      emit(GitReposLoading());
 
+    on<GitReposFilteredEvent>((event, emit) async {
       GitReposFlutterLocalDataSourceImpl localData =
           GitReposFlutterLocalDataSourceImpl();
+      final storedTimeInMin =
+          await localData.getStoredTimeDifferenceInMinutes();
+      if (storedTimeInMin! > 0) {
+        emit(ShowTimeState(timeLeft: storedTimeInMin));
+        return;
+      } else {
+        emit(GitReposLoading());
+      }
+
       final getSessionDataPrev = await localData.getSessionData();
       Params params = Params(
           page: getSessionDataPrev.page,
@@ -63,11 +83,12 @@ class GitReposFlutterBloc
 
       emit(GitReposFilterState(params: getSessionDataAfter));
     });
-    on<GitReposFilteredEventInitialState>((event, emit) async {
-      emit(GitReposLoading());
 
+    on<GitReposFilteredEventInitialState>((event, emit) async {
       GitReposFlutterLocalDataSourceImpl localData =
           GitReposFlutterLocalDataSourceImpl();
+
+      emit(GitReposLoading());
 
       final getSessionData = await localData.getSessionData();
 
@@ -75,7 +96,6 @@ class GitReposFlutterBloc
     });
 
     on<GitReposScrollEvent>((event, emit) async {
-      emit(LoadingState());
       GitReposFlutterLocalDataSourceImpl localData =
           GitReposFlutterLocalDataSourceImpl();
 

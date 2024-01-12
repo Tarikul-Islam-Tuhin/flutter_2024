@@ -100,7 +100,8 @@ class _HomePageState extends State<HomePage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state is GitReposLoaded) {
-                  return ListViewScreen(repoList: state.repos);
+                  return ListViewScreen(
+                      repoList: state.repos, filePath: state.filePath);
                 } else if (state is Error) {
                   return Text(state.message);
                 } else {

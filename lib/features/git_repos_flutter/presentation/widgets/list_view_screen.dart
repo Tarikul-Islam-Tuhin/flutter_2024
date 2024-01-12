@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:bs23_flutter_task/features/git_repos_flutter/presentation/pages/details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/git_repos_flutter_entity.dart';
@@ -5,7 +8,9 @@ import '../bloc/git_repos_flutter_bloc.dart';
 
 class ListViewScreen extends StatefulWidget {
   final List<GitReposFlutterEntity> repoList;
-  const ListViewScreen({super.key, required this.repoList});
+  final String filePath;
+  const ListViewScreen(
+      {super.key, required this.repoList, required this.filePath});
 
   @override
   State<ListViewScreen> createState() => _ListViewScreenState();
@@ -19,8 +24,6 @@ class _ListViewScreenState extends State<ListViewScreen> {
     scrollController.addListener(_scrollListener);
   }
 
-  bool isLoading = false;
-
   _scrollListener() {
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
@@ -33,8 +36,10 @@ class _ListViewScreenState extends State<ListViewScreen> {
   Widget build(BuildContext context) {
     return BlocListener<GitReposFlutterBloc, GitReposFlutterState>(
       listener: (context, state) {
-        if (state is LoadingState) {
-          isLoading = true;
+        if (state is ShowTimeState) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  'Please wait ${state.timeLeft} minutes before next fetch')));
         }
       },
       child: Expanded(
@@ -42,30 +47,40 @@ class _ListViewScreenState extends State<ListViewScreen> {
             controller: scrollController,
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
-            itemCount:
-                isLoading ? widget.repoList.length + 1 : widget.repoList.length,
+            itemCount: widget.repoList.length,
             itemBuilder: (context, index) {
-              if (index < widget.repoList.length) {
-                final user = widget.repoList[index];
-                final avatarUrl = user.owner.avatarUrl;
-                return Column(
+              final user = widget.repoList[index];
+              return InkWell(
+                onTap: () {
+                  // bloc action
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => DetailsPage(
+                              filePath: '${widget.filePath}${user.id}',
+                              repo: widget.repoList[index],
+                            )),
+                  );
+                },
+                child: Column(
                   key: const Key('Test-Column-Key'),
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 20),
+                          horizontal: 10, vertical: 10),
                       child: Row(
                         children: [
                           CircleAvatar(
                             radius: 27.0,
-                            backgroundImage: NetworkImage(avatarUrl),
+                            backgroundImage:
+                                FileImage(File('${widget.filePath}${user.id}')),
                             backgroundColor: Colors.transparent,
                           ),
                           const SizedBox(
                             width: 10,
                           ),
                           Text(
-                            widget.repoList.length.toString(),
+                            widget.repoList[index].name,
                             style: const TextStyle(
                                 color: Colors.black, fontSize: 16),
                           ),
@@ -74,14 +89,8 @@ class _ListViewScreenState extends State<ListViewScreen> {
                     ),
                     const Divider()
                   ],
-                );
-              } else {
-                return const Center(
-                    child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
-                ));
-              }
+                ),
+              );
             }),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:bs23_flutter_task/core/constants/constants.dart';
 import 'package:bs23_flutter_task/features/git_repos_flutter/presentation/bloc_providers/bloc_providers.dart';
 import 'package:bs23_flutter_task/features/git_repos_flutter/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   await Hive.initFlutter();
-  await Hive.openBox('sessionBox');
-  await Hive.openBox('reposBox');
+  await Hive.openBox(hiveSessionBox);
+  await Hive.openBox(hiveReposBox);
+  await Hive.openBox(hiveTimeIntervalBox);
   runApp(const MyApp());
 }
 

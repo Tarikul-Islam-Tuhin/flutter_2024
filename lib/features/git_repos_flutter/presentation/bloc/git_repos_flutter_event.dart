@@ -24,3 +24,7 @@ class GitReposFilteredEventInitialState extends GitReposFlutterEvent {
 class GitReposScrollEvent extends GitReposFlutterEvent {
   const GitReposScrollEvent();
 }
+
+class GitReposContinuousScrollEvent extends GitReposFlutterEvent {
+  const GitReposContinuousScrollEvent();
+}

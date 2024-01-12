@@ -28,6 +28,7 @@ class GitReposFlutterRepositoryImpl implements GitReposFlutterRepository {
         final remoteData =
             await remoteDataSource.getReposFlutter(params: params);
 
+        await localDataSource.setNext30minutes();
         await localDataSource.cacheRepos(remoteData);
         await localDataSource.setSessionData(params);
 

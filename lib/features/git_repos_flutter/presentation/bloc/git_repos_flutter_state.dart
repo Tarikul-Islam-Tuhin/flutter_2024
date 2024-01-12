@@ -15,7 +15,8 @@ class GitReposLoading extends GitReposFlutterState {}
 
 class GitReposLoaded extends GitReposFlutterState {
   final List<GitReposFlutterEntity> repos;
-  const GitReposLoaded({required this.repos});
+  final String filePath;
+  const GitReposLoaded({required this.repos, required this.filePath});
   @override
   List<Object> get props => [repos];
 }
@@ -36,4 +37,11 @@ final class GitReposFilterState extends GitReposActionState {
 
 class LoadingState extends GitReposActionState {
   LoadingState();
+}
+
+class ShowTimeState extends GitReposActionState {
+  final int timeLeft;
+  ShowTimeState({required this.timeLeft});
+  @override
+  List<Object> get props => [DateTime.now().toString()];
 }
