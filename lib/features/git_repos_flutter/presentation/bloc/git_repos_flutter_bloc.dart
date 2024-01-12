@@ -70,33 +70,30 @@ class GitReposFlutterBloc
     });
 
     on<GitReposFilteredEvent>((event, emit) async {
-      final bool hasNetWork = await networkInfo.isConnected;
+      final filePath = await getFilePath();
+      final getSessionDataPrev = await localData.getSessionData();
+      Params params = Params(
+          page: getSessionDataPrev.page,
+          stars: event.params.stars,
+          updated: event.params.updated);
+      await localData.setSessionData(params);
 
-      if (hasNetWork) {
-        final storedTimeInMin =
-            await localData.getStoredTimeDifferenceInMinutes();
-        if (storedTimeInMin! > 0) {
-          emit(ShowTimeState(timeLeft: storedTimeInMin));
-          return;
-        } else {
-          emit(GitReposLoading());
-        }
-
-        final getSessionDataPrev = await localData.getSessionData();
-        Params params = Params(
-            page: getSessionDataPrev.page,
-            stars: event.params.stars,
-            updated: event.params.updated);
-        await localData.setSessionData(params);
-
-        emit(GitReposFilterState(params: params));
+      emit(FilterByStarOrUpdateState(params: params));
+      final cachedRepo = await repository.localDataSource.getCachedRepos();
+      if (params.stars == 'stars') {
+        cachedRepo
+            ?.sort((a, b) => a.stargazersCount.compareTo(b.stargazersCount));
+      } else if (params.updated == 'updated') {
+        cachedRepo?.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
       }
+      emit(GitReposLoaded(repos: cachedRepo!, filePath: filePath));
     });
 
     on<GitReposFilteredEventInitialState>((event, emit) async {
       emit(GitReposLoading());
 
       final getSessionData = await localData.getSessionData();
+      emit(FilterByStarOrUpdateState(params: getSessionData));
 
       emit(GitReposFilterState(params: getSessionData));
     });

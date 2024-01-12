@@ -29,6 +29,7 @@ void main() {
         "avatar_url": "https://avatars.githubusercontent.com/u/14101776?v=4"
       },
       "updated_at": "2024-01-11T03:26:31.000Z",
+      "stargazers_count": 1,
       "description":
           "Flutter makes it easy and fast to build beautiful apps for mobile and beyond"
     };

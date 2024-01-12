@@ -27,21 +27,27 @@ class GitReposFlutterModel extends GitReposFlutterEntity {
       required String name,
       required String description,
       required OwnerModel owner,
-      required DateTime updatedAt})
+      required DateTime updatedAt,
+      required int stargazersCount})
       : super(
             owner: owner,
             id: id,
             description: description,
             updatedAt: updatedAt,
-            name: name);
+            name: name,
+            stargazersCount: stargazersCount);
 
   factory GitReposFlutterModel.fromJson(Map<String, dynamic> json) {
     return GitReposFlutterModel(
-        id: json["id"],
-        name: json["name"] ?? '',
-        description: json["description"] ?? '',
-        owner: OwnerModel.fromJson(json["owner"]),
-        updatedAt: DateTime.parse(json["updated_at"] ?? DateTime.now()));
+      id: json["id"],
+      name: json["name"] ?? '',
+      description: json["description"] ?? '',
+      owner: OwnerModel.fromJson(json["owner"]),
+      updatedAt: DateTime.parse(
+        json["updated_at"] ?? DateTime.now(),
+      ),
+      stargazersCount: json["stargazers_count"] ?? 0,
+    );
   }
 
   Map<String, dynamic> toJson() => {
@@ -49,6 +55,7 @@ class GitReposFlutterModel extends GitReposFlutterEntity {
         "name": name,
         "owner": (owner as OwnerModel).toJson(),
         "description": description,
-        "updated_at": updatedAt.toIso8601String()
+        "updated_at": updatedAt.toIso8601String(),
+        "stargazers_count": stargazersCount
       };
 }

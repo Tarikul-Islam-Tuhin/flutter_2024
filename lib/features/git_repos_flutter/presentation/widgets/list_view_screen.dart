@@ -51,14 +51,14 @@ class _ListViewScreenState extends State<ListViewScreen> {
               final user = widget.repoList[index];
               return InkWell(
                 onTap: () {
-                  // bloc action
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => DetailsPage(
-                              filePath: widget.filePath,
-                              repo: widget.repoList[index],
-                            )),
+                      builder: (context) => DetailsPage(
+                        filePath: widget.filePath,
+                        repo: widget.repoList[index],
+                      ),
+                    ),
                   );
                 },
                 child: Column(

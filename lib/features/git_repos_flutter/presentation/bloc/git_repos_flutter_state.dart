@@ -35,13 +35,16 @@ final class GitReposFilterState extends GitReposActionState {
   List<Object> get props => [params];
 }
 
-class LoadingState extends GitReposActionState {
-  LoadingState();
-}
-
 class ShowTimeState extends GitReposActionState {
   final int timeLeft;
   ShowTimeState({required this.timeLeft});
   @override
   List<Object> get props => [DateTime.now().toString()];
+}
+
+class FilterByStarOrUpdateState extends GitReposActionState {
+  final Params params;
+  FilterByStarOrUpdateState({required this.params});
+  @override
+  List<Object> get props => [params];
 }

@@ -6,11 +6,13 @@ class GitReposFlutterEntity {
   final String description;
   final OwnerEntity owner;
   final DateTime updatedAt;
+  final int stargazersCount;
 
   GitReposFlutterEntity(
       {required this.id,
       required this.name,
       required this.description,
       required this.owner,
-      required this.updatedAt});
+      required this.updatedAt,
+      required this.stargazersCount});
 }

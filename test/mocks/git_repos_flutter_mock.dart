@@ -8,7 +8,8 @@ final gitReposFlutterMock = GitReposFlutterEntity(
     name: 'test_name',
     description: 'test_description',
     owner: owner,
-    updatedAt: DateTime(2024, 2, 1));
+    updatedAt: DateTime(2024, 2, 1),
+    stargazersCount: 1);
 
 final owner = OwnerEntity(
     id: 12, avatarUrl: 'https://avatars.githubusercontent.com/u/14101776?v=4');
@@ -18,7 +19,8 @@ final gitReposFlutterMockForUpdatedParams = GitReposFlutterEntity(
     name: 'test_update',
     description: 'test_updated',
     owner: ownerUpdate,
-    updatedAt: DateTime(2024, 2, 1));
+    updatedAt: DateTime(2024, 2, 1),
+    stargazersCount: 1);
 
 final ownerUpdate = OwnerEntity(
     id: 13, avatarUrl: 'https://avatars.githubusercontent.com/u/71636191?v=4');
@@ -28,6 +30,7 @@ final gitReposFlutterModelMock = GitReposFlutterModel(
     name: "flutter",
     owner: ownerModelMock,
     updatedAt: DateTime.parse("2024-01-11T03:26:31Z"),
+    stargazersCount: 1,
     description:
         "Flutter makes it easy and fast to build beautiful apps for mobile and beyond");
 

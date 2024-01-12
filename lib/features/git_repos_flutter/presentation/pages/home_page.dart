@@ -33,9 +33,9 @@ class _HomePageState extends State<HomePage> {
               width: double.maxFinite,
               child: BlocBuilder<GitReposFlutterBloc, GitReposFlutterState>(
                 buildWhen: (previous, current) =>
-                    current is GitReposFilterState,
+                    current is FilterByStarOrUpdateState,
                 builder: (context, state) {
-                  if (state is GitReposFilterState) {
+                  if (state is FilterByStarOrUpdateState) {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -60,9 +60,10 @@ class _HomePageState extends State<HomePage> {
                         TextButton(
                             onPressed: () {
                               BlocProvider.of<GitReposFlutterBloc>(context).add(
-                                  const GitReposFilteredEvent(
-                                      params: Params(
-                                          updated: 'updated', stars: '')));
+                                const GitReposFilteredEvent(
+                                  params: Params(updated: 'updated', stars: ''),
+                                ),
+                              );
                             },
                             child: Text(
                               'Latest',

@@ -33,6 +33,13 @@ class GitReposFlutterRepositoryImpl implements GitReposFlutterRepository {
         await localDataSource.setSessionData(params);
 
         final updatedRemoteData = await localDataSource.getCachedRepos();
+        // sort based on stars or updated
+        if (params.stars == 'stars') {
+          updatedRemoteData
+              ?.sort((a, b) => a.stargazersCount.compareTo(b.stargazersCount));
+        } else if (params.updated == 'updated') {
+          updatedRemoteData?.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+        }
 
         return Right(updatedRemoteData!);
       } on ServerException {
@@ -41,6 +48,13 @@ class GitReposFlutterRepositoryImpl implements GitReposFlutterRepository {
     } else {
       try {
         final localRepos = await localDataSource.getCachedRepos();
+        // sort based on stars or updated
+        if (params.stars == 'stars') {
+          localRepos
+              ?.sort((a, b) => a.stargazersCount.compareTo(b.stargazersCount));
+        } else if (params.updated == 'updated') {
+          localRepos?.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+        }
         return Right(localRepos!);
       } on CacheException {
         return Left(CacheFailure(errorMessage: 'Epmty DB'));

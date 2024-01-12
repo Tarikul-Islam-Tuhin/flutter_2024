@@ -16,11 +16,6 @@ class GitReposFlutterRemoteDataSourceImpl
   _getUrl(Params params) {
     String url =
         'https://api.github.com/search/repositories?q=flutter&per_page=10';
-    if (params.stars == 'stars') {
-      url += '&sort=stars';
-    } else if (params.updated == 'updated') {
-      url += '&sort=updated';
-    }
     url += '&page=${params.page}';
     return url;
   }
