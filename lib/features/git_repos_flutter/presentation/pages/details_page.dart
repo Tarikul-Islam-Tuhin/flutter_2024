@@ -40,18 +40,21 @@ class _DetailsPageState extends State<DetailsPage> {
   Widget repoInfoCard(String title, String content) {
     return SizedBox(
       width: double.maxFinite,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '$title:',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text(content),
-            ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '$title:',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(content),
+              ],
+            ),
           ),
         ),
       ),
