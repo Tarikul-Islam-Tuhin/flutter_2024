@@ -41,12 +41,13 @@ class GitReposFlutterLocalDataSourceImpl
     final repos = Hive.box(hiveReposBox);
 
     if (repoToCache != null) {
+      Dio dio = Dio();
       for (int i = 0; i < repoToCache.length; i++) {
         // ignoring duplicates
         if (!repos.containsKey((repoToCache[i].id).toString())) {
           await repos.put(repoToCache[i].id, repoToCache[i].toJson());
           final path = await getImagePath(repoToCache[i].id.toString());
-          await Dio()
+          await dio
               .download(repoToCache[i].owner.avatarUrl, path)
               .onError((error, stackTrace) => throw CacheException());
         }

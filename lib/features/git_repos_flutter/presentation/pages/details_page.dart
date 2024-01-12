@@ -4,11 +4,24 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/parse_date_time.dart';
 import '../../domain/entities/git_repos_flutter_entity.dart';
+import '../widgets/image_file.dart';
 
-class DetailsPage extends StatelessWidget {
+class DetailsPage extends StatefulWidget {
   final String filePath;
   final GitReposFlutterEntity repo;
   const DetailsPage({super.key, required this.filePath, required this.repo});
+
+  @override
+  State<DetailsPage> createState() => _DetailsPageState();
+}
+
+class _DetailsPageState extends State<DetailsPage> {
+  File? imageFile;
+  @override
+  void initState() {
+    super.initState();
+    imageFile = File(widget.filePath);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +31,20 @@ class DetailsPage extends StatelessWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Center(
-              child: CircleAvatar(
+              child: ImageFile(
+                filePath: widget.filePath,
+                userId: widget.repo.id.toString(),
                 radius: 100.0,
-                backgroundImage: FileImage(File(filePath)),
-                backgroundColor: Colors.transparent,
               ),
+              // child: CircleAvatar(
+              //   radius: 100.0,
+              //   backgroundImage: FileImage(imageFile!),
+              //   backgroundColor: Colors.transparent,
+              // ),
             ),
-            repoInfoCard('Name', repo.name),
-            repoInfoCard('Repository description', repo.description),
-            repoInfoCard('Last Updated', formatDate(repo.updatedAt)),
+            repoInfoCard('Name', widget.repo.name),
+            repoInfoCard('Repository description', widget.repo.description),
+            repoInfoCard('Last Updated', formatDate(widget.repo.updatedAt)),
           ]),
         ),
       ),
@@ -38,7 +56,7 @@ class DetailsPage extends StatelessWidget {
       width: double.maxFinite,
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

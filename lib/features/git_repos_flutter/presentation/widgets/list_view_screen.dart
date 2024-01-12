@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:bs23_flutter_task/features/git_repos_flutter/presentation/pages/details_page.dart';
+import 'package:bs23_flutter_task/features/git_repos_flutter/presentation/widgets/image_file.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/git_repos_flutter_entity.dart';
@@ -57,7 +56,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => DetailsPage(
-                              filePath: '${widget.filePath}${user.id}',
+                              filePath: widget.filePath,
                               repo: widget.repoList[index],
                             )),
                   );
@@ -70,11 +69,10 @@ class _ListViewScreenState extends State<ListViewScreen> {
                           horizontal: 10, vertical: 10),
                       child: Row(
                         children: [
-                          CircleAvatar(
+                          ImageFile(
+                            filePath: widget.filePath,
+                            userId: '${user.id}',
                             radius: 27.0,
-                            backgroundImage:
-                                FileImage(File('${widget.filePath}${user.id}')),
-                            backgroundColor: Colors.transparent,
                           ),
                           const SizedBox(
                             width: 10,
