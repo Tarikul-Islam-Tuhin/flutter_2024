@@ -20,3 +20,6 @@ Key features:
 7. details page contains repo description, name, image, last update date time in the required format.
 8. stored all fetched data.
 
+Extra:
+Wrote Some Unit Tests, UI Tests and used flutter bloc as State Management by maintaing domain pattern architechture.
+
