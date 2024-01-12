@@ -8,6 +8,7 @@ import '../../../../core/utils/download_path.dart';
 import '../../../../core/errors/failure.dart';
 import '../../data/datasources/git_repos_flutter_local_data_source.dart';
 import '../../data/datasources/git_repos_flutter_remote_data_source.dart';
+import '../../data/models/git_repos_flutter_model.dart';
 import '../../data/repositories/git_repos_flutter_repository_impl.dart';
 import '../../domain/entities/git_repos_flutter_entity.dart';
 import '../../domain/usecases/get_git_repos_flutter.dart';
@@ -41,6 +42,19 @@ class GitReposFlutterBloc
     }
   }
 
+  List<GitReposFlutterModel>? sortCachedRepos(
+      List<GitReposFlutterModel>? cachedRepo, Params params) {
+    if (cachedRepo == null) return null;
+
+    if (params.stars == 'stars') {
+      cachedRepo.sort((a, b) => a.stargazersCount.compareTo(b.stargazersCount));
+    } else if (params.updated == 'updated') {
+      cachedRepo.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+    }
+
+    return cachedRepo;
+  }
+
   GitReposFlutterBloc() : super(GitReposFlutterInitial()) {
     on<GitReposLoadedEvent>((event, emit) async {
       final filePath = await getFilePath();
@@ -52,13 +66,8 @@ class GitReposFlutterBloc
         if (storedTimeInMin! > 0) {
           emit(ShowTimeState(timeLeft: storedTimeInMin));
           final cachedRepo = await repository.localDataSource.getCachedRepos();
-          if (event.params.stars == 'stars') {
-            cachedRepo?.sort(
-                (a, b) => a.stargazersCount.compareTo(b.stargazersCount));
-          } else if (event.params.updated == 'updated') {
-            cachedRepo?.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
-          }
-          emit(GitReposLoaded(repos: cachedRepo!, filePath: filePath));
+          final sortedRepo = sortCachedRepos(cachedRepo, event.params);
+          emit(GitReposLoaded(repos: sortedRepo!, filePath: filePath));
 
           return;
         }
@@ -86,13 +95,8 @@ class GitReposFlutterBloc
 
       emit(FilterByStarOrUpdateState(params: params));
       final cachedRepo = await repository.localDataSource.getCachedRepos();
-      if (params.stars == 'stars') {
-        cachedRepo
-            ?.sort((a, b) => a.stargazersCount.compareTo(b.stargazersCount));
-      } else if (params.updated == 'updated') {
-        cachedRepo?.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
-      }
-      emit(GitReposLoaded(repos: cachedRepo!, filePath: filePath));
+      final sortedRepo = sortCachedRepos(cachedRepo, event.params);
+      emit(GitReposLoaded(repos: sortedRepo!, filePath: filePath));
     });
 
     on<GitReposFilteredEventInitialState>((event, emit) async {
