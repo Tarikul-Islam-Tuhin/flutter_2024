@@ -42,7 +42,7 @@ class GitReposFlutterBloc
     }
   }
 
-  List<GitReposFlutterModel>? sortCachedRepos(
+  List<GitReposFlutterModel>? _sortCachedRepos(
       List<GitReposFlutterModel>? cachedRepo, Params params) {
     if (cachedRepo == null) return null;
 
@@ -66,7 +66,7 @@ class GitReposFlutterBloc
         if (storedTimeInMin! > 0) {
           emit(ShowTimeState(timeLeft: storedTimeInMin));
           final cachedRepo = await repository.localDataSource.getCachedRepos();
-          final sortedRepo = sortCachedRepos(cachedRepo, event.params);
+          final sortedRepo = _sortCachedRepos(cachedRepo, event.params);
           emit(GitReposLoaded(repos: sortedRepo!, filePath: filePath));
 
           return;
@@ -95,7 +95,7 @@ class GitReposFlutterBloc
 
       emit(FilterByStarOrUpdateState(params: params));
       final cachedRepo = await repository.localDataSource.getCachedRepos();
-      final sortedRepo = sortCachedRepos(cachedRepo, event.params);
+      final sortedRepo = _sortCachedRepos(cachedRepo, event.params);
       emit(GitReposLoaded(repos: sortedRepo!, filePath: filePath));
     });
 
