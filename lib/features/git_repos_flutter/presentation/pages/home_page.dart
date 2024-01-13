@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/params/params.dart';
 import '../bloc/git_repos_flutter_bloc.dart';
+import '../widgets/sort_button.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -39,41 +40,16 @@ class _HomePageState extends State<HomePage> {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        TextButton(
-                          onPressed: () {
-                            BlocProvider.of<GitReposFlutterBloc>(context).add(
-                              const GitReposFilteredEvent(
-                                params: Params(updated: '', stars: 'stars'),
-                              ),
-                            );
-                          },
-                          child: Text(
-                            'Stars',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: state.params.stars == 'stars'
-                                  ? Colors.blue
-                                  : Colors.white,
-                            ),
-                          ),
+                        SortButton(
+                          label: 'Stars',
+                          sortType: 'stars',
+                          blocSortState: state.params.stars!,
                         ),
-                        TextButton(
-                            onPressed: () {
-                              BlocProvider.of<GitReposFlutterBloc>(context).add(
-                                const GitReposFilteredEvent(
-                                  params: Params(updated: 'updated', stars: ''),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'Latest',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: state.params.updated == 'updated'
-                                    ? Colors.blue
-                                    : Colors.white,
-                              ),
-                            ))
+                        SortButton(
+                          label: 'Latest',
+                          sortType: 'updated',
+                          blocSortState: state.params.updated!,
+                        ),
                       ],
                     );
                   } else {
@@ -88,11 +64,13 @@ class _HomePageState extends State<HomePage> {
               listener: (context, state) {
                 if (state is GitReposFilterState) {
                   BlocProvider.of<GitReposFlutterBloc>(context).add(
-                      GitReposLoadedEvent(
-                          params: Params(
-                              page: state.params.page,
-                              stars: state.params.stars,
-                              updated: state.params.updated)));
+                    GitReposLoadedEvent(
+                      params: Params(
+                          page: state.params.page,
+                          stars: state.params.stars,
+                          updated: state.params.updated),
+                    ),
+                  );
                 }
               },
               builder: (context, state) {

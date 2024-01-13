@@ -50,6 +50,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
             itemBuilder: (context, index) {
               final user = widget.repoList[index];
               return InkWell(
+                key: const Key('Test-InkWell-Key'),
                 onTap: () {
                   Navigator.push(
                     context,
