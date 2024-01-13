@@ -85,7 +85,6 @@ class GitReposFlutterBloc
     });
 
     on<GitReposFilteredEvent>((event, emit) async {
-      final filePath = await getFilePath();
       final getSessionDataPrev = await localData.getSessionData();
       Params params = Params(
           page: getSessionDataPrev.page,
@@ -95,6 +94,7 @@ class GitReposFlutterBloc
 
       emit(FilterByStarOrUpdateState(params: params));
       final cachedRepo = await repository.localDataSource.getCachedRepos();
+      final filePath = await getFilePath();
       final sortedRepo = _sortCachedRepos(cachedRepo, event.params);
       emit(GitReposLoaded(repos: sortedRepo!, filePath: filePath));
     });
@@ -103,9 +103,16 @@ class GitReposFlutterBloc
       emit(GitReposLoading());
 
       final getSessionData = await localData.getSessionData();
-      emit(FilterByStarOrUpdateState(params: getSessionData));
-
-      emit(GitReposFilterState(params: getSessionData));
+      if (getSessionData.page != 1) {
+        emit(FilterByStarOrUpdateState(params: getSessionData));
+        final filePath = await getFilePath();
+        final cachedRepo = await repository.localDataSource.getCachedRepos();
+        final sortedRepo = _sortCachedRepos(cachedRepo, getSessionData);
+        emit(GitReposLoaded(repos: sortedRepo!, filePath: filePath));
+      } else {
+        emit(GitReposFilterState(params: getSessionData));
+        emit(FilterByStarOrUpdateState(params: getSessionData));
+      }
     });
 
     on<GitReposScrollEvent>((event, emit) async {
