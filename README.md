@@ -23,5 +23,4 @@ Home Page:
 ![Screenshot_1705066591](https://github.com/Tarikul-Islam-Tuhin/flutter_2024/assets/119291006/9fe79c76-4a3f-405c-9803-34fc11dd911a)
 
 Details Page: 
-![Screenshot_1705066599](https://github.com/Tarikul-Islam-Tuhin/flutter_2024/assets/119291006/dfcfc097-e562-4d5e-a1b5-23cfeb0764b2)
-
+![Screenshot_20240113-113938](https://github.com/Tarikul-Islam-Tuhin/flutter_2024/assets/119291006/25dd0b29-55a8-4d61-bfd3-a1205b26208c)
