@@ -1,10 +1,11 @@
 # bs23_flutter_task
+Update: Resolved pagination's page count issue and added a circular progress indicator while fetching
 The apk can be found the below drive link:
-https://drive.google.com/file/d/1N4X2B3dlCGcG4d3gnV2Pn4_AGiJnr2QG/view?usp=sharing
+https://drive.google.com/file/d/1vTcUlmqgpXIAEUTFZXPoAE0JoK6Zu7Np/view?usp=sharing
 
 Key features: 
 1. The fetch data is stored in the local database using hive.
-2. Scrolling will fetch 10 new items by maintaining pagination. Hold on some moments to see the data while scrolling since the data is being saved to the local storage.
+2. Scrolling will fetch 10 new items by maintaining pagination.
 3. The data cannot be fetched no more than once in every 30 minutes (Snackbar will visible after one fetch) .
 4. Showed list of repositories on the homepage.
 5. A repo details page by navigating by clicking on a item.
