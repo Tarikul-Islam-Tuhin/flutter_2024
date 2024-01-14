@@ -138,6 +138,7 @@ class GitReposFlutterBloc
         emit(GitReposFilterState(params: params, repos: reposInBloc));
       }
     });
+
     on<GitReposScrollContinuousEvent>((event, emit) async {
       emit(GitReposLoaded(
           repos: reposInBloc, filePath: filePath, isLoading: true));
