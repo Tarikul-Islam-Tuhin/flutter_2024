@@ -75,12 +75,29 @@ class _HomePageState extends State<HomePage> {
               },
               builder: (context, state) {
                 if (state is GitReposLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+                  return const SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: AlertDialog(
+                      backgroundColor: Colors.transparent,
+                      content: CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                    ),
                   );
                 } else if (state is GitReposLoaded) {
+                  if (state.isLoading != null) {
+                    return ListViewScreen(
+                      repoList: state.repos,
+                      filePath: state.filePath,
+                      isLoading: state.isLoading,
+                    );
+                  }
                   return ListViewScreen(
-                      repoList: state.repos, filePath: state.filePath);
+                    repoList: state.repos,
+                    filePath: state.filePath,
+                    isLoading: false,
+                  );
                 } else if (state is Error) {
                   return Text(state.message);
                 } else {
