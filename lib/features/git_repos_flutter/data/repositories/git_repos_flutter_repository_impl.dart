@@ -41,9 +41,9 @@ class GitReposFlutterRepositoryImpl implements GitReposFlutterRepository {
         final remoteData =
             await remoteDataSource.getReposFlutter(params: params);
 
-        await localDataSource.setNext30minutes();
         await localDataSource.cacheRepos(remoteData);
         await localDataSource.setSessionData(params);
+        await localDataSource.setNext30minutes();
 
         final updatedRemoteData = await localDataSource.getCachedRepos();
         final sortedData = _sortCachedRepos(updatedRemoteData, params);
@@ -55,7 +55,10 @@ class GitReposFlutterRepositoryImpl implements GitReposFlutterRepository {
       try {
         final localRepos = await localDataSource.getCachedRepos();
         final sortedData = _sortCachedRepos(localRepos, params);
-        return Right(sortedData!);
+        if (sortedData == null) {
+          return Left(CacheFailure(errorMessage: 'Epmty DB'));
+        }
+        return Right(sortedData);
       } on CacheException {
         return Left(CacheFailure(errorMessage: 'Epmty DB'));
       }
