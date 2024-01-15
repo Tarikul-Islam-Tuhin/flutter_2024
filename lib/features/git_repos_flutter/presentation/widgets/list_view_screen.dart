@@ -9,10 +9,10 @@ import '../bloc/git_repos_flutter_bloc.dart';
 class ListViewScreen extends StatefulWidget {
   final List<GitReposFlutterEntity> repoList;
   final String filePath;
-  final bool? isLoading;
+  final bool isLoading;
   const ListViewScreen(
       {super.key,
-      this.isLoading,
+      required this.isLoading,
       required this.repoList,
       required this.filePath});
 
@@ -61,7 +61,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
             controller: scrollController,
             shrinkWrap: true,
             physics: const BouncingScrollPhysics(),
-            itemCount: widget.isLoading!
+            itemCount: widget.isLoading
                 ? widget.repoList.length + 1
                 : widget.repoList.length,
             itemBuilder: (context, index) {
@@ -110,7 +110,7 @@ class _ListViewScreenState extends State<ListViewScreen> {
                     ],
                   ),
                 );
-              } else if (widget.isLoading!) {
+              } else if (widget.isLoading) {
                 return const Center(
                     child: SizedBox(
                         height: 40,
