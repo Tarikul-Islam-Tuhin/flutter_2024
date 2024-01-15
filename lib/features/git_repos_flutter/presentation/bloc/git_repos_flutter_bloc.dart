@@ -84,7 +84,7 @@ class GitReposFlutterBloc
         params: event.params,
       );
       failureOrRepos?.fold((error) {
-        emit(Error(message: _mapFailureToMessage(error)));
+        emit(ErrorState(message: _mapFailureToMessage(error)));
       }, (data) {
         reposInBloc = data;
         emit(GitReposLoaded(repos: data, filePath: filePath, isLoading: false));
@@ -107,7 +107,7 @@ class GitReposFlutterBloc
 
     on<GitReposFilteredEventInitialState>((event, emit) async {
       filePath = await getFilePath();
-      emit(GitReposLoading());
+      emit(GitReposLoadingState());
       final getSessionData = await localData.getSessionData();
       if (getSessionData.page != 1) {
         emit(FilterByStarOrUpdateState(params: getSessionData));

@@ -11,7 +11,7 @@ abstract class GitReposActionState extends GitReposFlutterState {}
 
 class GitReposFlutterInitial extends GitReposFlutterState {}
 
-class GitReposLoading extends GitReposFlutterState {}
+class GitReposLoadingState extends GitReposFlutterState {}
 
 class GitReposLoaded extends GitReposFlutterState {
   final List<GitReposFlutterEntity> repos;
@@ -23,9 +23,11 @@ class GitReposLoaded extends GitReposFlutterState {
   List<Object> get props => [repos, isLoading];
 }
 
-class Error extends GitReposFlutterState {
+class ErrorState extends GitReposFlutterState {
   final String message;
-  const Error({required this.message});
+  const ErrorState({required this.message});
+  @override
+  List<Object> get props => [message];
 }
 
 final class GitReposNavigateToDetailsPage extends GitReposActionState {}
@@ -42,7 +44,7 @@ class ShowTimeState extends GitReposActionState {
   final int timeLeft;
   ShowTimeState({required this.timeLeft});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [timeLeft];
 }
 
 class FilterByStarOrUpdateState extends GitReposActionState {

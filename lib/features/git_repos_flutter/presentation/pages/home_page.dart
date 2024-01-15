@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                 }
               },
               builder: (context, state) {
-                if (state is GitReposLoading) {
+                if (state is GitReposLoadingState) {
                   return const SizedBox(
                     height: 50,
                     width: 50,
@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                     filePath: state.filePath,
                     isLoading: state.isLoading,
                   );
-                } else if (state is Error) {
+                } else if (state is ErrorState) {
                   return Text(state.message);
                 } else {
                   return const Text('Nothing Found');
