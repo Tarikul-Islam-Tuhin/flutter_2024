@@ -78,23 +78,14 @@ class GitReposFlutterLocalDataSourceImpl
   Future<void>? setSessionData(Params params) async {
     final sessionBox = Hive.box(hiveSessionBox);
     await sessionBox.clear();
-    Map query = {};
-    if (params.updated == 'updated') {
-      query['updated'] = 'updated';
-    } else {
-      query['updated'] = '';
-    }
-    if (params.stars == 'stars') {
-      query['stars'] = 'stars';
-    } else {
-      query['stars'] = '';
-    }
-    if (params.page != null) {
-      query['perPage'] = params.page;
-    } else {
-      query['perPage'] = 1;
-    }
-    await sessionBox.put('sessionData', Map.from(query));
+
+    Map<String, dynamic> query = {
+      'updated': params.updated == 'updated' ? 'updated' : '',
+      'stars': params.stars == 'stars' ? 'stars' : '',
+      'perPage': params.page ?? 1,
+    };
+
+    await sessionBox.put('sessionData', query);
   }
 
   @override
