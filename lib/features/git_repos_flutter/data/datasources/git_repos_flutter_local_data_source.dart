@@ -32,7 +32,7 @@ class GitReposFlutterLocalDataSourceImpl
 
       return Future.value(gitReposList);
     } else {
-      throw CacheException();
+      return null;
     }
   }
 
