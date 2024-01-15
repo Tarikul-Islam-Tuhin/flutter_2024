@@ -5,8 +5,7 @@ Update:
 3. Refactored Bloc code
 
 The apk can be found the below drive link:
-
-https://drive.google.com/file/d/1vTcUlmqgpXIAEUTFZXPoAE0JoK6Zu7Np/view?usp=sharing
+https://drive.google.com/file/d/1qkHFpNIIzCtJmkQ4wdZrDAMjHd-exna0/view?usp=sharing
 
 Key features: 
 1. The fetch data is stored in the local database using hive.
