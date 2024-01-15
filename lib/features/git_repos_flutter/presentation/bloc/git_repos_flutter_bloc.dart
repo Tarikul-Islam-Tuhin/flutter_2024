@@ -109,8 +109,8 @@ class GitReposFlutterBloc
       filePath = await getFilePath();
       emit(GitReposLoadingState());
       final getSessionData = await localData.getSessionData();
-      final sortedRepo = await localData.getCachedRepos();
-      if (sortedRepo == null) {
+      final cachedRepo = await localData.getCachedRepos();
+      if (cachedRepo == null) {
         emit(GitReposFilterState(params: getSessionData));
         emit(FilterByStarOrUpdateState(params: getSessionData));
       } else {
