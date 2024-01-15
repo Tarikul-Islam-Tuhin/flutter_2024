@@ -16,11 +16,11 @@ class GitReposLoading extends GitReposFlutterState {}
 class GitReposLoaded extends GitReposFlutterState {
   final List<GitReposFlutterEntity> repos;
   final String filePath;
-  final bool? isLoading;
+  final bool isLoading;
   const GitReposLoaded(
-      {required this.repos, required this.filePath, this.isLoading});
+      {required this.repos, required this.filePath, required this.isLoading});
   @override
-  List<Object> get props => [repos, DateTime.now().toString()];
+  List<Object> get props => [repos, isLoading];
 }
 
 class Error extends GitReposFlutterState {

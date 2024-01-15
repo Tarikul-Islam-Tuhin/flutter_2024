@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                   return ListViewScreen(
                     repoList: state.repos,
                     filePath: state.filePath,
-                    isLoading: state.isLoading ?? false,
+                    isLoading: state.isLoading,
                   );
                 } else if (state is Error) {
                   return Text(state.message);
