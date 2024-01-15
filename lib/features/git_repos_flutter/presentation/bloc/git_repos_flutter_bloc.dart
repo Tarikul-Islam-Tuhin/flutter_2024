@@ -60,7 +60,6 @@ class GitReposFlutterBloc
       Params params) async {
     final cachedRepo = await repository.localDataSource.getCachedRepos();
     final sortedRepo = _sortCachedRepos(cachedRepo, params);
-    reposInBloc = sortedRepo!;
     return sortedRepo;
   }
 
@@ -75,8 +74,9 @@ class GitReposFlutterBloc
         if (storedTimeInMin! > 0) {
           emit(ShowTimeState(timeLeft: storedTimeInMin));
           final sortedRepo = await _getCachedSortedRepos(event.params);
+          reposInBloc = sortedRepo!;
           emit(GitReposLoaded(
-              repos: sortedRepo!, filePath: filePath, isLoading: false));
+              repos: sortedRepo, filePath: filePath, isLoading: false));
           return;
         }
       }
@@ -100,7 +100,8 @@ class GitReposFlutterBloc
       await localData.setSessionData(params);
       emit(FilterByStarOrUpdateState(params: params));
       final sortedRepo = await _getCachedSortedRepos(params);
-      emit(GitReposLoaded(repos: sortedRepo!, filePath: filePath));
+      reposInBloc = sortedRepo!;
+      emit(GitReposLoaded(repos: sortedRepo, filePath: filePath));
     });
 
     on<GitReposFilteredEventInitialState>((event, emit) async {
@@ -110,7 +111,8 @@ class GitReposFlutterBloc
       if (getSessionData.page != 1) {
         emit(FilterByStarOrUpdateState(params: getSessionData));
         final sortedRepo = await _getCachedSortedRepos(getSessionData);
-        emit(GitReposLoaded(repos: sortedRepo!, filePath: filePath));
+        reposInBloc = sortedRepo!;
+        emit(GitReposLoaded(repos: sortedRepo, filePath: filePath));
       } else {
         emit(GitReposFilterState(params: getSessionData));
         emit(FilterByStarOrUpdateState(params: getSessionData));
