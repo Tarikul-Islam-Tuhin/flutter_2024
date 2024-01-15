@@ -141,6 +141,9 @@ class GitReposFlutterBloc
           await localData.setSessionData(params);
         }
         emit(GitReposFilterState(params: params, repos: reposInBloc));
+      } else {
+        emit(GitReposLoaded(
+            repos: reposInBloc, filePath: filePath, isLoading: false));
       }
     });
 
